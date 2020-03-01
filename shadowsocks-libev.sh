@@ -18,8 +18,8 @@ cat >/etc/shadowsocks-libev/config.json<<-EOF
     "server_port":$(shuf -i 10000-65535 -n1),
     "local_port":1080,
     "password":"$(tr -dc 'a-z0-9A-Z' </dev/urandom | head -c 16)",
-    "timeout":60,
-    "method":"chacha20-ietf-poly1305"
+    "timeout":600,
+    "method":"xchacha20-ietf-poly1305"
 }
 EOF
 
