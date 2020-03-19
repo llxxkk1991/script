@@ -9,7 +9,7 @@ VER=${VER:=2.9.1}
 URL="https://github.com/ginuerzh/gost/releases/download/v${VER}/gost-linux-amd64-${VER}.gz"
 
 echo "1. Downloading gost-linux-amd64-${VER}.gz to /root/gost from $URL" && echo
-[[ -f "/root/gost" ]] && rm -rf /root/gost
+rm -rf /root/gost
 wget -O - $URL | gzip -d > /root/gost && chmod +x /root/gost
 
 echo "2. Generate /etc/systemd/system/gost.service"
