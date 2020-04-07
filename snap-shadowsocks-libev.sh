@@ -9,6 +9,7 @@
 apt update && apt install snapd -y && snap install core && snap install shadowsocks-libev
 
 # shadowsocks-libev config
+mkdir -p /var/snap/shadowsocks-libev/common/etc/shadowsocks-libev
 cat >/var/snap/shadowsocks-libev/common/etc/shadowsocks-libev/config.json<<-EOF
 {
     "server":["::", "0.0.0.0"],
