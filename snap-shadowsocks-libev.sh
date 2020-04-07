@@ -6,7 +6,7 @@
 [[ $EUID -ne 0 ]] && echo "Error, This script must be run as root!" && exit 1
   
 # install shadowsocks-libev from snap
-apt update && apt install snapd -y && snap install shadowsocks-libev
+apt update && apt install snapd -y && snap install core && snap install shadowsocks-libev
 
 # shadowsocks-libev config
 cat >/var/snap/shadowsocks-libev/common/etc/shadowsocks-libev/config.json<<-EOF
