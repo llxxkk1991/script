@@ -19,7 +19,7 @@ cat >/etc/shadowsocks-libev/config.json<<-EOF
     "local_port":1080,
     "password":"$(tr -dc 'a-z0-9A-Z' </dev/urandom | head -c 16)",
     "timeout":600,
-    "method":"xchacha20-ietf-poly1305"
+    "method":"aes-128-gcm"
 }
 EOF
 
