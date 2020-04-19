@@ -18,7 +18,7 @@ cat >/var/snap/shadowsocks-libev/common/etc/shadowsocks-libev/config.json<<-EOF
     "local_port":1080,
     "password":"$(tr -dc '~!@#$%^&*()_+a-z0-9A-Z' </dev/urandom | head -c 16)",
     "timeout":600,
-    "method":"aes-128-gcm"
+    "method":"chacha20-ietf-poly1305"
 }
 EOF
 
