@@ -10,7 +10,7 @@ url=http://gxiami.alicdn.com/xiami-desktop/update/XiamiMac-04091712.dmg
 Url=http://download.alicdn.com/dingtalk-desktop/mac_dmg/Release/DingTalk_v5.0.15.5.dmg
 
 # User-Agent
-UA="Mozilla/5.0 (Linux; Android 9; Nokia X6) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/72.0.3626.121 Mobile Safari/537.36"
+UA="Mozilla/5.0 (Linux; Android 9; Nokia X7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/72.0.3626.121 Mobile Safari/537.36"
 
 # Pre-processing MBlimit|via
 MBlimit=$(awk 'BEGIN{printf "%.f\n",('$MBlimit'*1024*1024)}')
@@ -31,7 +31,7 @@ while [[ $# > 0 ]];do
 	;;
 	yd|cm|YD|CM)
 		#China Mobile url Url
-		url=https://app.10086.cn/downfile/apk/ChinaMobile10086.apk
+		url=http://app.10086.cn/downfile/apk/ChinaMobile10086.apk
 		Url=http://wlanwm.12530.com/newcms/quku/fbpt_rsync_apps/local/signed/MobileMusic671/MobileMusic671_014000D.apk
 		via="China Mobile"
 	;;
