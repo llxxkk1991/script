@@ -8,16 +8,16 @@ VER="$(wget -qO- https://github.com/ginuerzh/gost/tags | grep -oEm1 "/tag/v[^\"]
 VER=${VER:=2.11.0}
 URL="https://github.com/ginuerzh/gost/releases/download/v${VER}/gost-linux-amd64-${VER}.gz"
 
-echo "1. Downloading gost-linux-amd64-${VER}.gz to /root/gost from $URL" && echo
-rm -rf /root/gost
-wget -O - $URL | gzip -d > /root/gost && chmod +x /root/gost
+echo "1. Downloading gost-linux-amd64-${VER}.gz to /usr/bin/gost from $URL" && echo
+rm -rf /usr/bin/gost
+wget -O - $URL | gzip -d > /usr/bin/gost && chmod +x /root/gost
 
-echo "2. Generate /etc/systemd/system/gost.service"
-cat <<EOF > /etc/systemd/system/gost.service
+echo "2. Generate /lib/systemd/system/gost.service"
+cat <<EOF > /lib/systemd/system/gost.service
 [Unit]
 Description=gost
 [Service]
-ExecStart=/root/gost $METHOD
+ExecStart=/usr/bin/gost $METHOD
 Restart=always
 User=root
 [Install]
