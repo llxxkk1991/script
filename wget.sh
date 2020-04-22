@@ -31,7 +31,7 @@ while [[ $# > 0 ]];do
 	;;
 	yd|cm|YD|CM)
 		#China Mobile url Url
-		url=https://app.10086.cn/downfile/apk/ChinaMobile10086.apk
+		url=https://appdownload.mail.10086.cn/download/d/c-9048001.apk
 		Url=http://wlanwm.12530.com/newcms/quku/fbpt_rsync_apps/local/signed/MobileMusic671/MobileMusic671_014000D.apk
 		via="China Mobile"
 	;;
