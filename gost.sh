@@ -10,7 +10,7 @@ URL="https://github.com/ginuerzh/gost/releases/download/v${VER}/gost-linux-amd64
 
 echo "1. Downloading gost-linux-amd64-${VER}.gz to /usr/bin/gost from $URL" && echo
 rm -rf /usr/bin/gost
-wget -O - $URL | gzip -d > /usr/bin/gost && chmod +x /root/gost
+wget -O - $URL | gzip -d > /usr/bin/gost && chmod +x /usr/bin/gost
 
 echo "2. Generate /lib/systemd/system/gost.service"
 cat <<EOF > /lib/systemd/system/gost.service
