@@ -8,7 +8,7 @@ URL="$(wget -qO- https://api.github.com/repos/ginuerzh/gost/releases/latest | gr
 rm -rf /usr/bin/gost
 wget -O - $URL | gzip -d > /usr/bin/gost && chmod +x /usr/bin/gost
 
-cat <<EOF > /lib/systemd/system/gost.service
+cat <<EOF > /etc/systemd/system/gost.service
 [Unit]
 Description=gost
 [Service]
