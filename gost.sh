@@ -25,3 +25,4 @@ WantedBy=multi-user.target
 EOF
 
 systemctl enable gost.service && systemctl daemon-reload && systemctl restart gost.service && systemctl status gost
+
