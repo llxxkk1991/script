@@ -6,8 +6,8 @@
 
 # Set MBlimit Alicdn url Url default
 MBlimit=1024
-url=http://gxiami.alicdn.com/xiami-desktop/update/XiamiMac-01311741.dmg
-Url=http://download.alicdn.com/dingtalk-desktop/mac_dmg/Release/DingTalk_v4.6.13.1.dmg
+url=http://gxiami.alicdn.com/xiami-desktop/update/XiamiMac-04091712.dmg
+Url=http://download.alicdn.com/dingtalk-desktop/mac_dmg/Release/DingTalk_v5.0.15.5.dmg
 
 # User-Agent
 UA="Mozilla/5.0 (Linux; Android 9; Nokia X6) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/72.0.3626.121 Mobile Safari/537.36"
