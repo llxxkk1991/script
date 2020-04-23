@@ -16,7 +16,7 @@ cat >/var/snap/shadowsocks-libev/common/etc/shadowsocks-libev/config.json<<-EOF
     "mode":"tcp_and_udp",
     "server_port":$(shuf -i 10000-65535 -n1),
     "local_port":1080,
-    "password":"$(tr -dc '~!@#$%^&*()_+a-z0-9A-Z' </dev/urandom | head -c 16)",
+    "password":"$(tr -dc 'a-z0-9A-Z' </dev/urandom | head -c 16)",
     "timeout":600,
     "method":"chacha20-ietf-poly1305"
 }
