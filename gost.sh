@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
-# Usage:
-#   bash <(curl -s https://raw.githubusercontent.com/mixool/script/debian-9/gost.sh) -L=:8080
+# Wiki: https://docs.ginuerzh.xyz/gost/
+# Usage: bash <(curl -s https://raw.githubusercontent.com/mixool/script/debian-9/gost.sh) -L=:8080
 
 [[ $# != 0 ]] && METHOD=$(echo $@) || METHOD="-L=ss://AEAD_CHACHA20_POLY1305:$(tr -dc 'a-z0-9A-Z' </dev/urandom | head -c 16)@:$(shuf -i 10000-65535 -n1)"
 
