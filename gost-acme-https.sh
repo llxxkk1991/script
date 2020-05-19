@@ -26,6 +26,7 @@ WantedBy=multi-user.target
 EOF
 
 #### 使用acme自动签发和安装证书
+apt update && apt install socat -y
 curl https://get.acme.sh | sh
 
 /root/.acme.sh/acme.sh  --upgrade  --auto-upgrade
