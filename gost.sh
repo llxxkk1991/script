@@ -5,14 +5,14 @@
 [[ $# != 0 ]] && METHOD=$(echo $@) || METHOD="-L=ss://AEAD_CHACHA20_POLY1305:$(tr -dc 'a-z0-9A-Z' </dev/urandom | head -c 16)@:$(shuf -i 60000-65535 -n1)"
 
 URL="$(wget -qO- https://api.github.com/repos/ginuerzh/gost/releases/latest | grep -E "browser_download_url.*gost-linux-amd64" | cut -f4 -d\")"
-rm -rf /usr/bin/gost
-wget -O - $URL | gzip -d > /usr/bin/gost && chmod +x /usr/bin/gost
+rm -rf /usr/local/bin/gost
+wget -O - $URL | gzip -d > /usr/local/bin/gost && chmod +x /usr/local/bin/gost
 
 cat <<EOF > /etc/systemd/system/gost.service
 [Unit]
 Description=gost
 [Service]
-ExecStart=/usr/bin/gost $METHOD
+ExecStart=/usr/local/bin/gost $METHOD
 Restart=always
 User=root
 [Install]
