@@ -1,6 +1,7 @@
 #!/usr/bin/env bash
 # Wiki: https://docs.ginuerzh.xyz/gost/
 # Usage: bash <(curl -s https://raw.githubusercontent.com/mixool/script/debian-9/gost.sh) -L=:8080
+# Uninstall: systemctl stop gost; systemctl disable gost; rm -rf /etc/systemd/system/gost.service /usr/bin/gost
 
 [[ $# != 0 ]] && METHOD=$(echo $@) || METHOD="-L=ss://AEAD_CHACHA20_POLY1305:$(tr -dc 'a-z0-9A-Z' </dev/urandom | head -c 16)@:$(shuf -i 60000-65535 -n1)"
 
