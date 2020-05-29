@@ -14,7 +14,8 @@ table inet filter {
         iif lo accept
         ct state invalid drop
         ct state established,related accept
-        tcp dport { 80, 443, $(cat /etc/ssh/sshd_config | grep -oE "^Port [0-9]*$" | grep -oE "[0-9]*" || echo 22) } accept
+        tcp dport { 80, 443 } accept
+        tcp dport $(cat /etc/ssh/sshd_config | grep -oE "^Port [0-9]*$" | grep -oE "[0-9]*" || echo 22) ct state new limit rate 15/minute accept
     }
 
     chain forward {
