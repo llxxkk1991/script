@@ -2,9 +2,8 @@
 PATH=/bin:/sbin:/usr/bin:/usr/sbin:/usr/local/bin:/usr/local/sbin:~/bin
 export PATH
 # Usage:  debian 10 one_key for caddy2 tls websocket vmess v2ray
-## bash <(curl -s https://raw.githubusercontent.com/mixool/script/debian-9/raywsscaddy.sh) my.domain.com
-# Uninstall_caddy: systemctl disable caddy; systemctl stop caddy; apt purge caddy -y
-# Uninstall_v2ray: bash <(curl -L -s https://install.direct/go.sh) --remove
+# install: bash <(curl -s https://raw.githubusercontent.com/mixool/script/debian-9/raywsscaddy.sh) my.domain.com
+# uninstall: apt purge caddy -y; rm -rf /etc/apt/sources.list.d/caddy-fury.list; bash <(curl -L -s https://install.direct/go.sh) --remove; rm -rf /etc/v2ray/config.json
 
 # install caddy
 apt update && apt install apt-transport-https ca-certificates -y
@@ -70,4 +69,15 @@ systemctl enable caddy && systemctl restart caddy && systemctl status caddy
 systemctl enable v2ray && systemctl restart v2ray && systemctl status v2ray
 
 # info
-echo $domain $uuid $path
+cat <<EOF >/tmp/$path
+        {
+            "protocol": "vmess",
+            "tag": "$domain",
+            "settings": {"vnext": [{"address": "$domain","port": 443,"users": [{"id": "$uuid"}]}]},
+            "streamSettings": {"network": "ws","security": "tls","tlsSettings": {"allowInsecure": false,"serverName": "$domain"},"wsSettings": {"path": "/$path","headers": {"Host": "$domain"}}}
+        }
+EOF
+
+cat /tmp/$path && rm -rf /tmp/$path
+
+# done
