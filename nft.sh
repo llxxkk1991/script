@@ -1,4 +1,4 @@
-!/usr/bin/env bash
+#!/usr/bin/env bash
 # Usage: bash <(curl -s https://raw.githubusercontent.com/mixool/script/debian-9/nft.sh)
 # Wiki: debian buster nftables https://wiki.archlinux.org/index.php/Nftables
 apt update && apt install nftables -y
