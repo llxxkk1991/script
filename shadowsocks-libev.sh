@@ -2,6 +2,7 @@
 # Usage: debian 10 & 9 installl shadowsocks-libev && backports
 #   curl https://raw.githubusercontent.com/mixool/script/debian-9/shadowsocks-libev.sh | bash
 #   uninstall: apt purge shadowsocks-libev -y; apt auto-remove -y
+### tips: shadowsocks-libev faild start: try to reboot your server and then reinstall with this script
 
 # only root can run this script
 [[ $EUID -ne 0 ]] && echo "Error, This script must be run as root!" && exit 1
