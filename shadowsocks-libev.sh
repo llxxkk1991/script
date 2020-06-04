@@ -1,14 +1,23 @@
 #!/bin/bash
-# Usage:
+# Usage: debian 10 & 9 installl shadowsocks-libev && backports
 #   curl https://raw.githubusercontent.com/mixool/script/debian-9/shadowsocks-libev.sh | bash
+#   uninstall: apt purge shadowsocks-libev -y
 
 # only root can run this script
 [[ $EUID -ne 0 ]] && echo "Error, This script must be run as root!" && exit 1
-  
-# install shadowsocks-libev from stretch-backports
-sh -c 'printf "deb http://deb.debian.org/debian stretch-backports main" > /etc/apt/sources.list.d/stretch-backports.list'
+
+# version stretch || buster
+version=$(cat /etc/os-release | grep -oE "VERSION_ID=\"(9|10)\"" | grep -oE "(9|10)")
+if [[ $version == 9 ]]; then
+	backports_version="stretch-backports-sloppy"
+else
+	[[ $version != 10 ]] &&  echo "Error, OS should be debian stretch or buster " && exit 1 || backports_version="buster-backports"
+fi
+
+# install shadowsocks-libev from backports
+echo "deb http://deb.debian.org/debian $backports_version main" > /etc/apt/sources.list.d/$backports_version.list
 apt update
-apt -t stretch-backports install shadowsocks-libev -y
+apt -t $backports_version install shadowsocks-libev -y
 
 # shadowsocks-libev config
 cat >/etc/shadowsocks-libev/config.json<<-EOF
@@ -17,8 +26,8 @@ cat >/etc/shadowsocks-libev/config.json<<-EOF
     "mode":"tcp_and_udp",
     "server_port":$(shuf -i 10000-65535 -n1),
     "local_port":1080,
-    "password":"$(tr -dc '~!@#$%^&*()_+a-z0-9A-Z' </dev/urandom | head -c 16)",
-    "timeout":600,
+    "password":"$(tr -dc 'a-z0-9A-Z' </dev/urandom | head -c 16)",
+    "timeout":86400,
     "method":"aes-128-gcm"
 }
 EOF
