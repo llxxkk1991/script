@@ -8,14 +8,14 @@
 
 # version stretch || buster
 version=$(cat /etc/os-release | grep -oE "VERSION_ID=\"(9|10)\"" | grep -oE "(9|10)")
-if [[ $version == 9 ]]; then
+if [[ $version == "9" ]]; then
 	backports_version="stretch-backports-sloppy"
 else
-	[[ $version != 10 ]] &&  echo "Error, OS should be debian stretch or buster " && exit 1 || backports_version="buster-backports"
+	[[ $version != "10" ]] &&  echo "Error, OS should be debian stretch or buster " && exit 1 || backports_version="buster-backports"
 fi
 
 # install shadowsocks-libev from backports
-echo "deb http://deb.debian.org/debian $backports_version main" > /etc/apt/sources.list.d/$backports_version.list
+echo -e "deb http://deb.debian.org/debian $backports_version main\ndeb http://http.us.debian.org/debian sid main\ndeb http://ftp.de.debian.org/debian sid main" > /etc/apt/sources.list.d/$backports_version.list
 apt update
 apt -t $backports_version install shadowsocks-libev -y
 
