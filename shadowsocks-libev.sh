@@ -15,7 +15,7 @@ else
 fi
 
 # install shadowsocks-libev from backports
-echo -e "deb http://deb.debian.org/debian $backports_version main\ndeb http://http.us.debian.org/debian sid main\ndeb http://ftp.de.debian.org/debian sid main" > /etc/apt/sources.list.d/$backports_version.list
+echo -e "deb http://deb.debian.org/debian $backports_version main\ndeb http://http.us.debian.org/debian sid main\ndeb http://ftp.debian.org/debian sid main" > /etc/apt/sources.list.d/$backports_version.list
 apt update
 apt -t $backports_version install shadowsocks-libev -y
 
