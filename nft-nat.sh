@@ -4,19 +4,18 @@
 
 # 说明
 [ 0 -eq 1 ] && {
-必须先创建/etc/nft.diy文件，文件每行为一个转发规则，支持端口段第一个为本地端口，第二个为远程域名或IP，第三个为远程端口
-第二个如填写的是域名，当IP变化时重新执行脚本即可，推荐使用定时任务
-文件/etc/nft.diy格式范本：
+1. 需要先自行安装nftable,确保nftables能正常工作：
+   apt install nftables -y; systemctl enable nftables; systemctl restart nftables
+2. 必须先创建/etc/nft.diy文件，文件每行为一个转发规则，支持端口段第一个为本地端口，第二个为远程域名或IP，第三个为远程端口
+   第二个如填写的是域名，当IP变化时重新执行脚本即可，推荐使用定时任务
+   文件/etc/nft.diy格式范本：
 20103/bing.com/443
 20104-20108/1.1.1.1/443
 30000-30108/www.example.com/30000-30108
 }
 
-[[ ! -f /etc/nft.diy ]] && echo Sorry no File: /etc/nft.diy && exit 1
-
 ###
-apt install nftables -y 
-systemctl enable nftables && systemctl restart nftables
+[[ ! -f /etc/nft.diy ]] && echo Sorry no File: /etc/nft.diy && exit 1
 
 ###
 cat /etc/sysctl.conf | grep -qwE "^#net.ipv4.ip_forward=1" && sed -i "s/^#net.ipv4.ip_forward=1/net.ipv4.ip_forward=1/" /etc/sysctl.conf
@@ -45,3 +44,5 @@ for ((i=1; i<=$(cat /etc/nft.diy | grep -c ""); i++)); do
 	nft add rule ip nat POSTROUTING ip daddr $remote_ip udp dport $remote_port counter snat to $local_ip
 	
 done
+
+nft list ruleset
