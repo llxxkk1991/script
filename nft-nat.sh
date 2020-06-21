@@ -6,7 +6,9 @@
 [ 0 -eq 1 ] && {
 1. 需要先自行安装nftable,确保nftables能正常工作，脚本已在debian 10上测试：
    apt install nftables -y; systemctl enable nftables; systemctl restart nftables
-2. 必须先创建/etc/nft.diy文件，文件每行为一个转发规则，支持端口段第一个为本地端口，第二个为远程域名或IP，第三个为远程端口
+2. 脚本运行后转发生效，重启后失效，可使用定时任务执行此脚本，或者脚本运行完毕使用下面命令保存规则:
+   echo '#!/usr/sbin/nft -f' >/etc/nftables.conf; echo "flush ruleset" >>/etc/nftables.conf; nft list ruleset >>/etc/nftables.conf
+3. 必须先创建/etc/nft.diy文件，文件每行为一个转发规则，支持端口段第一个为本地端口，第二个为远程域名或IP，第三个为远程端口
    第二个如填写的是域名，当IP变化时重新执行脚本即可，推荐使用定时任务
    文件/etc/nft.diy格式范本：
 20103/bing.com/443
