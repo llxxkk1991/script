@@ -4,7 +4,7 @@
 
 # 说明
 [ 0 -eq 1 ] && {
-1. 需要先自行安装nftable,确保nftables能正常工作：
+1. 需要先自行安装nftable,确保nftables能正常工作，脚本已在debian 10上测试：
    apt install nftables -y; systemctl enable nftables; systemctl restart nftables
 2. 必须先创建/etc/nft.diy文件，文件每行为一个转发规则，支持端口段第一个为本地端口，第二个为远程域名或IP，第三个为远程端口
    第二个如填写的是域名，当IP变化时重新执行脚本即可，推荐使用定时任务
