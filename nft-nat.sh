@@ -10,7 +10,10 @@
    echo '#!/usr/sbin/nft -f' >/etc/nftables.conf; echo "flush ruleset" >>/etc/nftables.conf; nft list ruleset >>/etc/nftables.conf
 3. 必须先创建/etc/nft.diy文件，文件每行为一个转发规则，支持端口段第一个为本地端口，第二个为远程域名或IP，第三个为远程端口
    第二个如填写的是域名，当IP变化时重新执行脚本即可，推荐使用定时任务
-   文件/etc/nft.diy格式范本：
+   wget --no-check-certificate -O /opt/nft-nat.sh https://raw.githubusercontent.com/mixool/script/debian-9/nft-nat.sh
+   chmod 755 /opt/nft-nat.sh
+   (crontab -l ; echo "0 */2 * * * /opt/nft-nat.sh") | crontab -
+4. 文件/etc/nft.diy格式范本：
 20103/bing.com/443
 20104-20108/1.1.1.1/443
 30000-30108/www.example.com/30000-30108
