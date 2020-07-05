@@ -1,54 +1,23 @@
-#!/bin/bash
-# Usage:
-#   curl https://raw.githubusercontent.com/mixool/script/master/kcptun.sh | bash
+#!/usr/bin/env bash
+# Wiki: https://github.com/esrrhs/kcptun
+# Usage: bash <(curl -s https://raw.githubusercontent.com/mixool/script/debian-9/kcptun.sh)
+# Uninstall: systemctl stop kcptun; systemctl disable kcptun; rm -rf /etc/systemd/system/kcptun.service /usr/bin/kcptun
 
-# Color
-export green='\033[0;32m'
-export plain='\033[0m'
+[[ $# != 0 ]] && METHOD=$(echo $@) || METHOD="-l :$(shuf -i 10000-65535 -n1) -t 127.0.0.1:8388 --key $(tr -dc 'a-z0-9A-Z' </dev/urandom | head -c 16) --crypt aes -mode fast --smuxver 2 --quiet"
 
-# Export 
-export URL="https://raw.githubusercontent.com/mixool/script/source/server_linux_amd64"
-export NAME="server_linux_amd64"
-export DO="-l :11001 -t 127.0.0.1:11000"
+URL="$(wget -qO- https://api.github.com/repos/xtaci/kcptun/releases/latest | grep -E "browser_download_url.*linux-amd64" | cut -f4 -d\")"
+rm -rf /usr/bin/kcptun
+wget -O /tmp/kcptun.tar.gz $URL && tar -zxf /tmp/kcptun.tar.gz && mv /tmp/server_linux_amd64 /usr/bin/kcptun && chmod +x /usr/bin/kcptun && rm /tmp/client_linux_amd64 /tmp/kcptun.tar.gz
 
-if [ "$(id -u)" != "0" ]; then
-    echo "ERROR: Please run as root"
-    exit 1
-fi
-
-echo -e "${green}Clean up $NAME${plain}"
-systemctl disable $NAME.service
-killall -9 $NAME
-rm -rf /root/$NAME /etc/systemd/system/$NAME.service
-
-echo "Download $NAME from $URL"
-curl -L "${URL}" >/root/$NAME
-chmod +x /root/$NAME
-
-echo "Generate /etc/systemd/system/$NAME.service"
-cat <<EOF > /etc/systemd/system/$NAME.service
+cat <<EOF > /etc/systemd/system/kcptun.service
 [Unit]
-Description=$NAME
-
+Description=kcptun
 [Service]
-ExecStart=/root/$NAME $DO
+ExecStart=/usr/bin/kcptun $METHOD
 Restart=always
 User=root
-
 [Install]
 WantedBy=multi-user.target
 EOF
 
-echo "Enable $NAME Service"
-systemctl enable $NAME.service
-
-echo "Start $NAME Service"
-systemctl start $NAME.service
-
-if systemctl status $NAME >/dev/null; then
-	echo "$NAME started:"
-	echo -e "${green}vi /etc/systemd/system/$NAME.service${plain} as needed."
-	echo -e "${green}systemctl daemon-reload && systemctl restart $NAME.service${plain} for restart."
-else
-	echo "$NAME start failed."
-fi
+systemctl enable kcptun.service && systemctl daemon-reload && systemctl restart kcptun.service && systemctl status kcptun
