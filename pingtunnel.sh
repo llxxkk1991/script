@@ -3,7 +3,7 @@
 # Usage: bash <(curl -s https://raw.githubusercontent.com/mixool/script/debian-9/pingtunnel.sh) -type server
 # Uninstall: systemctl stop pingtunnel; systemctl disable pingtunnel; rm -rf /etc/systemd/system/pingtunnel.service /usr/bin/pingtunnel
 
-[[ $# != 0 ]] && METHOD=$(echo $@) || METHOD="-type server"
+[[ $# != 0 ]] && METHOD=$(echo $@) || METHOD="-type server -nolog 1 -noprint 1 -key $(tr -dc 'a-z0-9A-Z' </dev/urandom | head -c 16)"
 
 URL="$(wget -qO- https://api.github.com/repos/esrrhs/pingtunnel/releases/latest | grep -E "browser_download_url.*pingtunnel_linux64" | cut -f4 -d\")"
 rm -rf /usr/bin/pingtunnel
