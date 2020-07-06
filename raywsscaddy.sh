@@ -32,7 +32,7 @@ file_server
 @websockets_$path {
 header Connection Upgrade
 header Upgrade websocket
-path /$path
+path /$path/*
 }
 reverse_proxy @websockets_$path localhost:$vport
 EOF
