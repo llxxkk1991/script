@@ -29,11 +29,12 @@ root * /usr/share/caddy
 
 file_server
 
-@websockets {
+@websockets_$path {
 header Connection Upgrade
 header Upgrade websocket
+path /$path
 }
-reverse_proxy @websockets localhost:$vport
+reverse_proxy @websockets_$path localhost:$vport
 EOF
 
 # config v2ray
