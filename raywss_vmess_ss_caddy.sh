@@ -70,7 +70,7 @@ cat <<EOF >/etc/v2ray/config.json
         {
             "port": $ssport,"listen":"127.0.0.1","protocol": "shadowsocks",
             "settings": {"method": "$ssmethod","password": "$sspasswd","network": "tcp,udp"},
-            "streamSettings": {"network": "ws","wsSettings": {"path": "/path_wssss"}}
+            "streamSettings": {"network": "ws","wsSettings": {"path": "/$path_wssss"}}
         }
     ],
     
@@ -111,4 +111,5 @@ cat <<EOF >$TMPFILE
         },
 EOF
 
+cat $TMPFILE
 # done
