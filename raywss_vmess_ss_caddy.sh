@@ -10,7 +10,7 @@ trap 'rm -f "$TMPFILE"' EXIT
 TMPFILE=$(mktemp) || exit 1
 
 ########
-[[ $# != 1 ]] && echo Err !!! Useage: bash $0 my.domain.com && exit 1 || domain="$1"
+[[ $# != 1 ]] && echo Err !!! Useage: bash this_script.sh my.domain.com && exit 1 || domain="$1"
 
 ssport=$(shuf -i 10000-65535 -n1)
 vmessport=$(shuf -i 10000-65535 -n1)
