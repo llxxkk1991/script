@@ -10,8 +10,8 @@ trap 'rm -f "$TMPFILE"' EXIT
 TMPFILE=$(mktemp) || exit 1
 
 ########
-[[ $# != 1 ]] && echo Err !!! Useage: bash $0 my.domain.com && exit 1
-domain="$1"
+[[ $# != 1 ]] && echo Err !!! Useage: bash $0 my.domain.com && exit 1 || domain="$1"
+
 ssport=$(shuf -i 10000-65535 -n1)
 vmessport=$(shuf -i 10000-65535 -n1)
 until [[ $ssport != $vmessport ]]; do vmessport=$(shuf -i 10000-65535 -n1); done
@@ -33,8 +33,6 @@ apt update && apt install caddy -y
 
 # install v2ray
 bash <(curl -L -s https://install.direct/go.sh)
-
-
 
 # config caddy
 cat <<EOF >/etc/caddy/Caddyfile
@@ -69,11 +67,11 @@ cat <<EOF >/etc/v2ray/config.json
             "settings": {"clients": [{"id": "$uuid"}]},
             "streamSettings": {"network": "ws","wsSettings": {"path": "/$path_vmess"}}
         },
-		{
-			"port": $ssport,"listen":"127.0.0.1","protocol": "shadowsocks",
-			"settings": {"method": "$ssmethod","password": "$sspasswd","network": "tcp,udp"},
-			"streamSettings": {"network": "ws","wsSettings": {"path": "/path_wssss"}}
-		}
+        {
+            "port": $ssport,"listen":"127.0.0.1","protocol": "shadowsocks",
+            "settings": {"method": "$ssmethod","password": "$sspasswd","network": "tcp,udp"},
+            "streamSettings": {"network": "ws","wsSettings": {"path": "/path_wssss"}}
+        }
     ],
     
     "outbounds": 
@@ -105,12 +103,12 @@ cat <<EOF >$TMPFILE
             "streamSettings": {"network": "ws","security": "tls","tlsSettings": {"allowInsecure": false,"serverName": "$domain"},"wsSettings": {"path": "/$path_vmess","headers": {"Host": "$domain"}}}
         },
 
-		{
-			"protocol": "shadowsocks",
-			"tag": "wssss_$domain",
-			"settings": {"servers":[{"address": "$domain","port": 443,"method": "$ssmethod","password": "$sspasswd"}]},
-			"streamSettings": {"network": "ws","security": "tls","tlsSettings": {"allowInsecure": false,"serverName": "$domain"},"wsSettings": {"path": "/$path_wssss","headers": {"Host": "$domain"}}}
-		},
+        {
+            "protocol": "shadowsocks",
+            "tag": "wssss_$domain",
+            "settings": {"servers":[{"address": "$domain","port": 443,"method": "$ssmethod","password": "$sspasswd"}]},
+            "streamSettings": {"network": "ws","security": "tls","tlsSettings": {"allowInsecure": false,"serverName": "$domain"},"wsSettings": {"path": "/$path_wssss","headers": {"Host": "$domain"}}}
+        },
 EOF
 
 # done
