@@ -79,12 +79,17 @@ cat <<EOF >/etc/v2ray/config.json
         {"protocol": "freedom","settings": {}},
         {"protocol": "blackhole","tag": "blocked","settings": {}}
     ],
-    
+    "dns": 
+	{
+		"servers":["https+local://dns.google/dns-query","https+local://1.1.1.1/dns-query","localhost"],
+		"clientIp": "$(ping -w 1 -c 1 $domain | head -n 1 | grep -oE "[0-9]+\.[0-9]+\.[0-9]+\.[0-9]+" | head -n 1)"
+    },
     "routing": 
     {
         "rules": 
         [
-            {"type": "field","outboundTag": "blocked","ip": ["geoip:private"]}
+            {"type": "field","outboundTag": "blocked","ip": ["geoip:private"]},
+			{"type": "field","outboundTag": "blocked","domain": ["geosite:category-ads-all"]}
         ]
     }
 }
