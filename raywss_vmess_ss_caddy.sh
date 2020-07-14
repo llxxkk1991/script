@@ -76,7 +76,7 @@ cat <<EOF >/etc/v2ray/config.json
     
     "outbounds": 
     [
-        {"protocol": "freedom","settings": {}},
+        {"protocol": "freedom","tag": "direct","settings": {"domainStrategy": "UseIP"}},
         {"protocol": "blackhole","tag": "blocked","settings": {}}
     ],
     "dns": 
@@ -86,6 +86,7 @@ cat <<EOF >/etc/v2ray/config.json
     },
     "routing": 
     {
+        "domainStrategy": "IPIfNonMatch",
         "rules": 
         [
             {"type": "field","outboundTag": "blocked","ip": ["geoip:private"]},
