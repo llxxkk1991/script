@@ -20,9 +20,9 @@ table inet my_table {
         ip6 nexthdr ipv6-icmp limit rate 5/second accept
         ip protocol igmp limit rate 5/second accept
 
-        tcp dport { http, https } accept
-        udp dport { http, https } accept
-        tcp dport $(cat /etc/ssh/sshd_config | grep -oE "^Port [0-9]*$" | grep -oE "[0-9]*" || echo 22) ct state new limit rate 5/minute accept
+        tcp dport { http, https } counter accept
+        udp dport { http, https } counter accept
+        tcp dport $(cat /etc/ssh/sshd_config | grep -oE "^Port [0-9]*$" | grep -oE "[0-9]*" || echo 22) ct state new limit rate 5/minute counter accept
         
         counter comment "count dropped packets"
     }
