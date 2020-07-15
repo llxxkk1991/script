@@ -12,24 +12,21 @@ table inet my_table {
     chain my_input {
         type filter hook input priority 0; policy drop;
 
-        iif lo accept comment "Accept any localhost traffic"
-        ct state invalid drop comment "Drop invalid connections"
+        ct state established,related accept
+        ct state invalid drop
+        iifname lo accept
 
-        meta l4proto icmp icmp type echo-request limit rate over 10/second burst 4 packets drop comment "No ping floods"
-        meta l4proto ipv6-icmp icmpv6 type echo-request limit rate over 10/second burst 4 packets drop comment "No ping floods"
+        ip protocol icmp limit rate 5/second accept
+        ip6 nexthdr ipv6-icmp limit rate 5/second accept
+        ip protocol igmp limit rate 5/second accept
 
-        ct state established,related accept comment "Accept traffic originated from us"
-
-        meta l4proto ipv6-icmp icmpv6 type { destination-unreachable, packet-too-big, time-exceeded, parameter-problem, mld-listener-query, mld-listener-report, mld-listener-reduction, nd-router-solicit, nd-router-advert, nd-neighbor-solicit, nd-neighbor-advert, ind-neighbor-solicit, ind-neighbor-advert, mld2-listener-report } accept comment "Accept ICMPv6"
-        meta l4proto icmp icmp type { destination-unreachable, router-solicitation, router-advertisement, time-exceeded, parameter-problem } accept comment "Accept ICMP"
-        ip protocol igmp accept comment "Accept IGMP"
-
-        tcp dport { 80, 443 } accept
-        tcp dport $(cat /etc/ssh/sshd_config | grep -oE "^Port [0-9]*$" | grep -oE "[0-9]*" || echo 22) ct state new limit rate 5/minute accept comment "Avoid brute force on SSH"
+        tcp dport { http, https } accept
+        udp dport { http, https } accept
+        tcp dport $(cat /etc/ssh/sshd_config | grep -oE "^Port [0-9]*$" | grep -oE "[0-9]*" || echo 22) ct state new limit rate 5/minute accept
     }
     
     chain my_forward {
-        type filter hook forward priority 0; policy drop;
+        type filter hook forward priority 0; policy accept;
     }
     
     chain my_output {
