@@ -42,6 +42,8 @@ root * /usr/share/caddy
 
 file_server
 
+header Strict-Transport-Security max-age=31536000
+
 @websockets_$path_wssss {
 header Connection Upgrade
 header Upgrade websocket
