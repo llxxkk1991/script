@@ -14,6 +14,7 @@ table inet my_table {
         
         ip6 nexthdr icmpv6 icmpv6 type echo-request limit rate 1/second accept
         ip6 nexthdr icmpv6 icmpv6 type echo-request counter drop
+        
         ip protocol icmp icmp type echo-request limit rate 1/second accept
         ip protocol icmp icmp type echo-request counter drop
         
@@ -24,10 +25,6 @@ table inet my_table {
         ip protocol icmp icmp type { destination-unreachable, router-advertisement, time-exceeded, parameter-problem } accept
         
         iif lo accept
-
-        ip protocol icmp limit rate 5/second accept
-        ip6 nexthdr ipv6-icmp limit rate 5/second accept
-        ip protocol igmp limit rate 5/second accept
 
         tcp dport { http, https } counter accept
         udp dport { http, https } counter accept
