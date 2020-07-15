@@ -12,9 +12,9 @@ table inet my_table {
     chain my_input {
         type filter hook input priority 0; policy drop;
 
-        ct state established,related accept
         ct state invalid drop
-        iifname lo accept
+		ct state {established, related} accept
+		iif lo accept
 
         ip protocol icmp limit rate 5/second accept
         ip6 nexthdr ipv6-icmp limit rate 5/second accept
@@ -23,14 +23,18 @@ table inet my_table {
         tcp dport { http, https } accept
         udp dport { http, https } accept
         tcp dport $(cat /etc/ssh/sshd_config | grep -oE "^Port [0-9]*$" | grep -oE "[0-9]*" || echo 22) ct state new limit rate 5/minute accept
+		
+		counter comment "count dropped packets"
     }
     
     chain my_forward {
         type filter hook forward priority 0; policy accept;
+		counter comment "count accepted packets"
     }
     
     chain my_output {
         type filter hook output priority 0; policy accept;
+		counter comment "count accepted packets"
     }
 }
 EOF
