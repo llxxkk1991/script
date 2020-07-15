@@ -11,9 +11,18 @@ flush ruleset
 table inet my_table {
     chain my_input {
         type filter hook input priority 0; policy drop;
-
-        ct state invalid drop
+        
+        ip6 nexthdr icmpv6 icmpv6 type echo-request limit rate 1/second accept
+        ip6 nexthdr icmpv6 icmpv6 type echo-request counter drop
+        ip protocol icmp icmp type echo-request limit rate 1/second accept
+        ip protocol icmp icmp type echo-request counter drop
+        
         ct state {established, related} counter accept
+        ct state invalid drop
+        
+        ip6 nexthdr icmpv6 icmpv6 type { destination-unreachable, packet-too-big, time-exceeded, parameter-problem, echo-reply, nd-router-advert, nd-neighbor-solicit, nd-neighbor-advert } accept
+        ip protocol icmp icmp type { destination-unreachable, router-advertisement, time-exceeded, parameter-problem } accept
+        
         iif lo accept
 
         ip protocol icmp limit rate 5/second accept
