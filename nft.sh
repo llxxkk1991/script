@@ -13,7 +13,7 @@ table inet my_table {
         type filter hook input priority 0; policy drop;
 
         ct state invalid drop
-        ct state {established, related} accept
+        ct state {established, related} counter accept
         iif lo accept
 
         ip protocol icmp limit rate 5/second accept
