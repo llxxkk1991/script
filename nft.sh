@@ -1,8 +1,11 @@
 #!/usr/bin/env bash
 # Usage: bash <(curl -s https://raw.githubusercontent.com/mixool/script/debian-9/nft.sh)
 # Wiki: debian buster nftables https://wiki.archlinux.org/index.php/Nftables
-apt update && apt install nftables -y
 
+# dependencies
+command -v dig > /dev/null 2>&1 || { echo >&2 "Please install nftables： apt update && apt install nftables -y . Aborting."; exit 1; }
+
+# nftables
 cat <<EOF > /etc/nftables.conf
 #!/usr/sbin/nft -f
 
