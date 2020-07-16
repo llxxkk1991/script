@@ -19,8 +19,11 @@
 30000-30108/www.example.com/30000-30108
 }
 
+### dependencies
+command -v nft > /dev/null 2>&1 || { echo >&2 "Please install nftables： apt update && apt install nftables -y"; exit 1; }
+
 ###
-[[ ! -f /etc/nft.diy ]] && echo Sorry no File: /etc/nft.diy && exit 1
+[[ ! -f /etc/nft.diy ]] && echo Sorry, no File: /etc/nft.diy && exit 1
 
 ###
 cat /etc/sysctl.conf | grep -qwE "^#net.ipv4.ip_forward=1" && sed -i "s/^#net.ipv4.ip_forward=1/net.ipv4.ip_forward=1/" /etc/sysctl.conf
