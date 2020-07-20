@@ -4,8 +4,8 @@
 
 # 说明
 [ 0 -eq 1 ] && {
-1. 需要先自行安装nftable,确保nftables能正常工作，脚本已在debian 10上测试：
-   apt install nftables -y; systemctl enable nftables; systemctl restart nftables
+1. 需要先自行安装nftable和dnsutils,确保nftables能正常工作，脚本已在debian 10上测试：
+   apt install nftables dnsutils -y; systemctl enable nftables; systemctl restart nftables
 2. 脚本运行后转发生效，重启后失效，可使用定时任务执行此脚本，或者脚本运行完毕使用下面命令保存规则:
    echo '#!/usr/sbin/nft -f' >/etc/nftables.conf; echo "flush ruleset" >>/etc/nftables.conf; nft list ruleset >>/etc/nftables.conf
 3. 必须先创建/etc/nft.diy文件，文件每行为一个转发规则，支持端口段第一个为本地端口，第二个为远程域名或IP，第三个为远程端口
@@ -21,7 +21,7 @@
 
 ### dependencies
 command -v nft > /dev/null 2>&1 || { echo >&2 "Please install nftables： apt update && apt install nftables -y"; exit 1; }
-command -v dig > /dev/null 2>&1 || { echo >&2 "Please install dnsutils. Aborting."; exit 1; }
+command -v dig > /dev/null 2>&1 || { echo >&2 "Please install dnsutils： apt update && apt install dnsutils -y"; exit 1; }
 
 ###
 [[ ! -f /etc/nft.diy ]] && echo Sorry, no File: /etc/nft.diy && exit 1
