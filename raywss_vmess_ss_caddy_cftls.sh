@@ -34,16 +34,13 @@ rm -rf /etc/apt/sources.list.d/caddy-fury.list
 echo "deb [trusted=yes] https://apt.fury.io/caddy/ /" | tee -a /etc/apt/sources.list.d/caddy-fury.list
 apt update && apt install caddy -y
 
-# xcaddy build caddy with pulgin dns.providers.cloudflare
-rm -rf /usr/local/go /root/xcaddy
+## xcaddy build caddy with pulgin dns.providers.cloudflare
 wget -O - https://golang.org/dl/go1.14.6.linux-amd64.tar.gz | tar -xz -C /usr/local
-
 URL="$(wget -qO- https://api.github.com/repos/caddyserver/xcaddy/releases | grep -E "browser_download_url.*linux_amd64" | cut -f4 -d\")"
 wget -O /root/xcaddy $URL && chmod +x /root/xcaddy
 /root/xcaddy build --with github.com/caddy-dns/cloudflare
 mv -f /root/caddy /usr/bin/caddy
-
-[[ ! $(caddy list-modules | grep -q "dns.providers.cloudflare") ]] && echo caddy with pulgin dns.providers.cloudflare build failed, rm files: /usr/local/go /root/xcaddy && exit 1 || echo caddy with pulgin dns.providers.cloudflare build successed
+caddy list-modules | grep -q "dns.providers.cloudflare" && echo caddy with pulgin dns.providers.cloudflare build successed || { echo caddy with pulgin dns.providers.cloudflare build failed, rm files: /usr/local/go /root/xcaddy; exit 1; }
 rm -rf /usr/local/go /root/xcaddy
 
 # install v2ray
