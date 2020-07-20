@@ -88,7 +88,7 @@ cat <<EOF >/etc/v2ray/config.json
     ],
     "dns": 
     {
-        "servers":["https+local://dns.google/dns-query","https+local://1.1.1.1/dns-query","localhost"],
+        "servers":["https+local://dns.google/dns-query","https+local://1.1.1.1/dns-query","8.8.8.8","1.1.1.1","localhost"],
         "clientIp": "$(ping -w 1 -c 1 $domain | head -n 1 | grep -oE "[0-9]+\.[0-9]+\.[0-9]+\.[0-9]+" | head -n 1)"
     },
     "routing": 
