@@ -21,6 +21,7 @@
 
 ### dependencies
 command -v nft > /dev/null 2>&1 || { echo >&2 "Please install nftables： apt update && apt install nftables -y"; exit 1; }
+command -v dig > /dev/null 2>&1 || { echo >&2 "Please install dnsutils. Aborting."; exit 1; }
 
 ###
 [[ ! -f /etc/nft.diy ]] && echo Sorry, no File: /etc/nft.diy && exit 1
@@ -43,7 +44,7 @@ for ((i=1; i<=$(cat /etc/nft.diy | grep -c ""); i++)); do
 	local_ip=$(ip address | grep -E "scope global" | head -n1 | cut -f6 -d" " | cut -f1 -d"/")
 	
 	remote_port=$(cat /etc/nft.diy | sed -n "${i}p" | cut -f3 -d/)
-	remote_ip=$(ping -w 1 -c 1 $(cat /etc/nft.diy | sed -n "${i}p" | cut -f2 -d/) | head -n 1 | grep -oE "[0-9]+\.[0-9]+\.[0-9]+\.[0-9]+" | head -n 1)
+	remote_ip=$(dig $(cat /etc/nft.diy | sed -n "${i}p" | cut -f2 -d/) | grep -A 1 -E "ANSWER SECTION" | grep -oE "[0-9]+\.[0-9]+\.[0-9]+\.[0-9]+")
 	
 	nft add rule ip nat PREROUTING tcp dport $local_port counter dnat to $remote_ip:$remote_port
 	nft add rule ip nat PREROUTING udp dport $local_port counter dnat to $remote_ip:$remote_port
