@@ -4,7 +4,7 @@
 
 # 说明
 [ 0 -eq 1 ] && {
-1. 需要先自行安装nftable,确保nftables能正常工作，脚本已在debian 10上测试：
+1. 需要先自行安装nftable,确保nftables能正常工作，脚本仅在debian 10上测试：
    apt install nftables -y; systemctl enable nftables; systemctl restart nftables
 2. 脚本运行后转发生效，重启后失效，可使用定时任务执行此脚本，或者脚本运行完毕使用下面命令保存规则:
    echo '#!/usr/sbin/nft -f' >/etc/nftables.conf; echo "flush ruleset" >>/etc/nftables.conf; nft list ruleset >>/etc/nftables.conf
