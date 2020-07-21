@@ -40,18 +40,19 @@ nft add chain nat POSTROUTING { type nat hook postrouting priority \ -100 \; }
 
 for ((i=1; i<=$(cat /etc/nft.diy | grep -c ""); i++)); do
 
-	local_port=$(cat /etc/nft.diy | sed -n "${i}p" | cut -f1 -d/)
-	local_ip=$(ip address | grep -E "scope global" | head -n1 | cut -f6 -d" " | cut -f1 -d"/")
-	
-	remote_port=$(cat /etc/nft.diy | sed -n "${i}p" | cut -f3 -d/)
-	cat /etc/nft.diy | sed -n "${i}p" | cut -f2 -d/ | grep -q "[a-zA-Z]" && remote_ip=$(dig $(cat /etc/nft.diy | sed -n "${i}p" | cut -f2 -d/) | grep -A 1 -E "ANSWER SECTION" | grep -oE "[0-9]+\.[0-9]+\.[0-9]+\.[0-9]+") || remote_ip=$(at /etc/nft.diy | sed -n "${i}p" | cut -f2 -d/)
-	
-	nft add rule ip nat PREROUTING tcp dport $local_port counter dnat to $remote_ip:$remote_port
-	nft add rule ip nat PREROUTING udp dport $local_port counter dnat to $remote_ip:$remote_port
-	
-	nft add rule ip nat POSTROUTING ip daddr $remote_ip tcp dport $remote_port counter snat to $local_ip
-	nft add rule ip nat POSTROUTING ip daddr $remote_ip udp dport $remote_port counter snat to $local_ip
-	
+    local_port=$(cat /etc/nft.diy | sed -n "${i}p" | cut -f1 -d/)
+    local_ip=$(ip address | grep -E "scope global" | head -n1 | cut -f6 -d" " | cut -f1 -d"/")
+    
+    remote_port=$(cat /etc/nft.diy | sed -n "${i}p" | cut -f3 -d/)
+    cat /etc/nft.diy | sed -n "${i}p" | cut -f2 -d/ | grep -q "[a-zA-Z]" && \
+    remote_ip=$(dig $(cat /etc/nft.diy | sed -n "${i}p" | cut -f2 -d/) | grep -A 1 -E "ANSWER SECTION" | grep -oE "[0-9]+\.[0-9]+\.[0-9]+\.[0-9]+") || remote_ip=$(at /etc/nft.diy | sed -n "${i}p" | cut -f2 -d/)
+    
+    nft add rule ip nat PREROUTING tcp dport $local_port counter dnat to $remote_ip:$remote_port
+    nft add rule ip nat PREROUTING udp dport $local_port counter dnat to $remote_ip:$remote_port
+    
+    nft add rule ip nat POSTROUTING ip daddr $remote_ip tcp dport $remote_port counter snat to $local_ip
+    nft add rule ip nat POSTROUTING ip daddr $remote_ip udp dport $remote_port counter snat to $local_ip
+    
 done
 
 nft list ruleset
