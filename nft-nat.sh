@@ -4,8 +4,8 @@
 
 # 说明
 [ 0 -eq 1 ] && {
-1. 需要先自行安装nftable,确保nftables能正常工作，脚本已在debian 10上测试：
-   apt install nftables -y; systemctl enable nftables; systemctl restart nftables
+1. 需要先自行安装nftable和dnsutils,确保nftables能正常工作，脚本已在debian 10上测试：
+   apt install nftables dnsutils -y; systemctl enable nftables; systemctl restart nftables
 2. 脚本运行后转发生效，重启后失效，可使用定时任务执行此脚本，或者脚本运行完毕使用下面命令保存规则:
    echo '#!/usr/sbin/nft -f' >/etc/nftables.conf; echo "flush ruleset" >>/etc/nftables.conf; nft list ruleset >>/etc/nftables.conf
 3. 必须先创建/etc/nft.diy文件，文件每行为一个转发规则，支持端口段第一个为本地端口，第二个为远程域名或IP，第三个为远程端口
@@ -20,7 +20,8 @@
 }
 
 ### dependencies
-command -v nft > /dev/null 2>&1 || { echo "Please install nftables： apt update && apt install nftables -y"; exit 1; }
+command -v nft > /dev/null 2>&1 || { echo >&2 "Please install nftables： apt update && apt install nftables -y"; exit 1; }
+command -v dig > /dev/null 2>&1 || { echo >&2 "Please install dnsutils： apt update && apt install dnsutils -y"; exit 1; }
 
 ###
 [[ ! -f /etc/nft.diy ]] && echo Sorry, no File: /etc/nft.diy && exit 1
@@ -43,7 +44,8 @@ for ((i=1; i<=$(cat /etc/nft.diy | grep -c ""); i++)); do
     local_ip=$(ip address | grep -E "scope global" | head -n1 | cut -f6 -d" " | cut -f1 -d"/")
     
     remote_port=$(cat /etc/nft.diy | sed -n "${i}p" | cut -f3 -d/)
-    remote_ip=$(ping -w 1 -c 1 $(cat /etc/nft.diy | sed -n "${i}p" | cut -f2 -d/) | head -n 1 | grep -oE "[0-9]+\.[0-9]+\.[0-9]+\.[0-9]+" | head -n 1)
+    cat /etc/nft.diy | sed -n "${i}p" | cut -f2 -d/ | grep -q "[a-zA-Z]" && \
+    remote_ip=$(dig $(cat /etc/nft.diy | sed -n "${i}p" | cut -f2 -d/) | grep -A 1 -E "ANSWER SECTION" | grep -oE "[0-9]+\.[0-9]+\.[0-9]+\.[0-9]+") || remote_ip=$(at /etc/nft.diy | sed -n "${i}p" | cut -f2 -d/)
     
     nft add rule ip nat PREROUTING tcp dport $local_port counter dnat to $remote_ip:$remote_port
     nft add rule ip nat PREROUTING udp dport $local_port counter dnat to $remote_ip:$remote_port
