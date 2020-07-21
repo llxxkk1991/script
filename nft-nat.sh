@@ -44,7 +44,7 @@ for ((i=1; i<=$(cat /etc/nft.diy | grep -c ""); i++)); do
 	local_ip=$(ip address | grep -E "scope global" | head -n1 | cut -f6 -d" " | cut -f1 -d"/")
 	
 	remote_port=$(cat /etc/nft.diy | sed -n "${i}p" | cut -f3 -d/)
-	remote_ip=$(dig $(cat /etc/nft.diy | sed -n "${i}p" | cut -f2 -d/) | grep -A 1 -E "ANSWER SECTION" | grep -oE "[0-9]+\.[0-9]+\.[0-9]+\.[0-9]+")
+	cat /etc/nft.diy | sed -n "${i}p" | cut -f2 -d/ | grep -q "[a-zA-Z]" && remote_ip=$(dig $(cat /etc/nft.diy | sed -n "${i}p" | cut -f2 -d/) | grep -A 1 -E "ANSWER SECTION" | grep -oE "[0-9]+\.[0-9]+\.[0-9]+\.[0-9]+") || remote_ip=$(at /etc/nft.diy | sed -n "${i}p" | cut -f2 -d/)
 	
 	nft add rule ip nat PREROUTING tcp dport $local_port counter dnat to $remote_ip:$remote_port
 	nft add rule ip nat PREROUTING udp dport $local_port counter dnat to $remote_ip:$remote_port
