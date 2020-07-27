@@ -3,7 +3,7 @@ PATH=/bin:/sbin:/usr/bin:/usr/sbin:/usr/local/bin:/usr/local/sbin:~/bin
 export PATH
 # Usage:  debian 9/10 one_key for caddy2 tls websocket vmess v2ray
 # install: bash <(curl -s https://raw.githubusercontent.com/mixool/script/debian-9/vsswss.sh) my.domain.com
-# uninstall: apt purge caddy -y; rm -rf /etc/apt/sources.list.d/caddy-fury.list; bash <(curl -L -s https://install.direct/go.sh) --remove; rm -rf /etc/v2ray/config.json
+# uninstall: apt purge caddy -y; rm -rf /etc/apt/sources.list.d/caddy-fury.list; bash <(curl https://raw.githubusercontent.com/v2fly/fhs-install-v2ray/master/install-release.sh) --remove; rm -rf /etc/v2ray/config.json
 
 # tempfile & rm it when exit
 trap 'rm -f "$TMPFILE"' EXIT
@@ -19,7 +19,7 @@ until [[ $ssport != $vmessport ]]; do vmessport=$(shuf -i 10000-65535 -n1); done
 path_wssss=$(tr -dc 'a-z0-9A-Z' </dev/urandom | head -c 16)
 path_vmess=$(tr -dc 'a-z0-9A-Z' </dev/urandom | head -c 16)
 
-uuid=$(/usr/bin/v2ray/v2ctl uuid)
+uuid=$(/usr/local/bin/v2ctl uuid)
 
 ssmethod="aes-128-gcm"
 sspasswd=$(tr -dc 'a-z0-9A-Z' </dev/urandom | head -c 16)
@@ -32,7 +32,7 @@ echo "deb [trusted=yes] https://apt.fury.io/caddy/ /" | tee -a /etc/apt/sources.
 apt update && apt install caddy -y
 
 # install v2ray
-bash <(curl -L -s https://install.direct/go.sh)
+bash <(curl https://raw.githubusercontent.com/v2fly/fhs-install-v2ray/master/install-release.sh)
 
 # config caddy
 cat <<EOF >/etc/caddy/Caddyfile
@@ -65,7 +65,7 @@ reverse_proxy @websockets_$path_vmess localhost:$vmessport
 EOF
 
 # config v2ray
-cat <<EOF >/etc/v2ray/config.json
+cat <<EOF >/usr/local/etc/v2ray/config.json
 {
     "inbounds": 
     [
@@ -83,14 +83,9 @@ cat <<EOF >/etc/v2ray/config.json
     
     "outbounds": 
     [
-        {"protocol": "freedom","tag": "direct","settings": {"domainStrategy": "UseIP"}},
+        {"protocol": "freedom","tag": "direct","settings": {}},
         {"protocol": "blackhole","tag": "blocked","settings": {}}
     ],
-    "dns": 
-    {
-        "servers":["https+local://dns.google/dns-query","https+local://1.1.1.1/dns-query","8.8.8.8","1.1.1.1","localhost"],
-        "clientIp": "$(ping -w 1 -c 1 $domain | head -n 1 | grep -oE "[0-9]+\.[0-9]+\.[0-9]+\.[0-9]+" | head -n 1)"
-    },
     "routing": 
     {
         "domainStrategy": "IPIfNonMatch",
