@@ -49,14 +49,14 @@ Referrer-Policy no-referrer-when-downgrade
 }
 
 @websockets_$path_wssss {
-header Connection Upgrade
-header Upgrade websocket
+header Connection *Upgrade*
+header Upgrade    websocket
 path /$path_wssss
 }
 
 @websockets_$path_vmess {
-header Connection Upgrade
-header Upgrade websocket
+header Connection *Upgrade*
+header Upgrade    websocket
 path /$path_vmess
 }
 reverse_proxy @websockets_$path_wssss localhost:$ssport
