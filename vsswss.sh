@@ -98,14 +98,11 @@ cat <<EOF >/usr/local/etc/v2ray/config.json
 EOF
 
 # systemctl service 
-systemctl enable caddy && systemctl restart caddy
-systemctl enable v2ray && systemctl restart v2ray
-
-# info 
-echo; echo $(date) Check Install Status:; echo "systemctl status caddy; systemctl status v2ray"
+systemctl enable caddy && systemctl restart caddy && sleep 3 && systemctl status caddy | more
+systemctl enable v2ray && systemctl restart v2ray && sleep 3 && systemctl status v2ray | more
 
 # info
-echo; echo $(date) V2ray Config Info:
+echo; echo $(date) v2ray config info:
 cat <<EOF >$TMPFILE
         {
             "protocol": "vmess",
