@@ -99,9 +99,9 @@ EOF
 
 # systemctl service info
 echo; echo $(date) caddy status:
-systemctl enable caddy && systemctl restart caddy && sleep 3 && systemctl status caddy | more
+systemctl enable caddy && systemctl restart caddy && sleep 1 && systemctl status caddy | more | grep -A 2 "caddy.service"
 echo; echo $(date) v2ray status:
-systemctl enable v2ray && systemctl restart v2ray && sleep 3 && systemctl status v2ray | more
+systemctl enable v2ray && systemctl restart v2ray && sleep 1 && systemctl status v2ray | more | grep -A 2 "v2ray.service"
 
 # info
 echo; echo $(date) v2ray config info:
