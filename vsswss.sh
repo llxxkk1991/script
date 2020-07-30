@@ -19,8 +19,6 @@ until [[ $ssport != $vmessport ]]; do vmessport=$(shuf -i 10000-65535 -n1); done
 path_wssss=$(tr -dc 'a-z0-9A-Z' </dev/urandom | head -c 16)
 path_vmess=$(tr -dc 'a-z0-9A-Z' </dev/urandom | head -c 16)
 
-uuid=$(/usr/local/bin/v2ctl uuid)
-
 ssmethod="aes-128-gcm"
 sspasswd=$(tr -dc 'a-z0-9A-Z' </dev/urandom | head -c 16)
 ########
@@ -33,6 +31,8 @@ apt update && apt install caddy -y
 
 # install v2ray
 bash <(curl https://raw.githubusercontent.com/v2fly/fhs-install-v2ray/master/install-release.sh)
+
+uuid=$(/usr/local/bin/v2ctl uuid)
 
 # config caddy
 cat <<EOF >/etc/caddy/Caddyfile
