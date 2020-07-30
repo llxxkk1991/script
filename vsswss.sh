@@ -97,8 +97,10 @@ cat <<EOF >/usr/local/etc/v2ray/config.json
 }
 EOF
 
-# systemctl service 
+# systemctl service info
+echo; echo $(date) caddy status:
 systemctl enable caddy && systemctl restart caddy && sleep 3 && systemctl status caddy | more
+echo; echo $(date) v2ray status:
 systemctl enable v2ray && systemctl restart v2ray && sleep 3 && systemctl status v2ray | more
 
 # info
