@@ -31,7 +31,6 @@ apt update && apt install caddy -y
 
 # install v2ray
 bash <(curl https://raw.githubusercontent.com/v2fly/fhs-install-v2ray/master/install-release.sh)
-
 uuid=$(/usr/local/bin/v2ctl uuid)
 
 # config caddy
