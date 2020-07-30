@@ -102,7 +102,7 @@ systemctl enable caddy && systemctl restart caddy
 systemctl enable v2ray && systemctl restart v2ray
 
 # info 
-echo; echo $(date) Check Install Status:; echo "systemctl status caddy && systemctl status v2ray"
+echo; echo $(date) Check Install Status:; echo "systemctl status caddy; systemctl status v2ray"
 
 # info
 echo; echo $(date) V2ray Config Info:
