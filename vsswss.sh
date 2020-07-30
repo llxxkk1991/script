@@ -105,6 +105,7 @@ systemctl enable v2ray && systemctl restart v2ray
 echo; echo $(date) Check Install Status:; echo "systemctl status caddy && systemctl status v2ray"
 
 # info
+echo; echo $(date) V2ray Config Info:
 cat <<EOF >$TMPFILE
         {
             "protocol": "vmess",
