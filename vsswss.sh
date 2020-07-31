@@ -4,7 +4,7 @@ export PATH
 # Usage:  debian 9/10 one_key for caddy2 tls websocket vmess v2ray
 # install: bash <(curl -s https://raw.githubusercontent.com/mixool/script/debian-9/vsswss.sh) my.domain.com
 # uninstall: apt purge caddy -y; rm -rf /etc/apt/sources.list.d/caddy-fury.list; bash <(curl https://raw.githubusercontent.com/v2fly/fhs-install-v2ray/master/install-release.sh) --remove; rm -rf /usr/local/etc/v2ray /var/log/v2ray
-## Tips: 同时配置了三种模式: wss+ss wss+vmess h2+vmess, 如不需要自行删除相关代码. h2模式目前需要自己编译最新caddy
+## Tips: 同时配置了三种模式: wss+ss wss+vmess h2+vmess, 如不需要可在安装完成后删除(caddy|v2ray)配置文件中相关代码后重启服务即可. h2模式目前需要自己编译最新caddy
 
 # tempfile & rm it when exit
 trap 'rm -f "$TMPFILE"' EXIT
