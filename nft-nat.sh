@@ -35,7 +35,7 @@ nft add table ip nat
 nft delete table ip nat
 nft add table ip nat
 nft add chain nat PREROUTING { type nat hook prerouting priority \ -100 \; }
-nft add chain nat POSTROUTING { type nat hook postrouting priority \ 100 \; }
+nft add chain nat POSTROUTING { type nat hook postrouting priority 100 \; }
 
 for ((i=1; i<=$(cat /etc/nft.diy | grep -c ""); i++)); do
 
