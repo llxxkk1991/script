@@ -23,29 +23,29 @@ function main() {
     [[ $i -gt 0 ]] && sleep $(shuf -i 123-321 -n 1)
     username="${account_name[i]}"
     password="${account_pswd[i]}"
-	
+    
     echo; echo -n $(date) $username登陆...
     data="mod=logging&action=login&loginsubmit=yes&infloat=yes&lssubmit=yes&inajax=1&fastloginfield=username&username=$username&cookietime=$(shuf -i 1234567-7654321 -n 1)&password=$password&quickforward=yes&handlekey=ls"
-    curl -s -H "$UA" -c $workdir/cookie_$username --data "$data" "https://www.hostloc.com/member.php" | grep -o "www.hostloc.com" && status=0 || status=1
+    curl -sA "$UA" -c $workdir/cookie_$username --data "$data" "https://www.hostloc.com/member.php" | grep -o "www.hostloc.com" && status=0 || status=1
     [[ $status -eq 0 ]] && username_good[i]=${account_name[i]} && echo $(date) 成功
     [[ $status -eq 1 ]] && username_fail[i]=${account_name[i]} && echo && echo $(date) 失败 && continue
-	
-    echo $(date) 目前积分为：$(curl -s -H "$UA" -b $workdir/cookie_$username "https://www.hostloc.com/home.php?mod=spacecp&ac=credit&op=base" | grep -oE "积分: </em>\w*" | awk -F'[>]' '{print $2}')
-	
-    times=$[10 - $(curl -s -H "$UA" -b $workdir/cookie_$username "https://www.hostloc.com/home.php?mod=spacecp&ac=credit&op=log&suboperation=creditrulelog" | grep -A 2 "rid=16" | awk -F'[><]' 'NR==3{print $3}')]
+    
+    echo $(date) 目前积分为：$(curl -sA "$UA" -b $workdir/cookie_$username "https://www.hostloc.com/home.php?mod=spacecp&ac=credit&op=base" | grep -oE "积分: </em>\w*" | awk -F'[>]' '{print $2}')
+    
+    times=$[10 - $(curl -sA "$UA" -b $workdir/cookie_$username "https://www.hostloc.com/home.php?mod=spacecp&ac=credit&op=log&suboperation=creditrulelog" | grep -A 2 "rid=16" | awk -F'[><]' 'NR==3{print $3}')]
     [[ $times -eq 0 ]] && echo $(date) 已完成 && continue
-	
+    
     echo -n $(date) 访问空间
-	
+    
     for((j = 6610; j <= 6630; j++)); do
     echo -n .
-    curl -s -H "$UA" -b $workdir/cookie_$username "https://www.hostloc.com/space-uid-$j.html" | grep -o "最近访客" >/dev/null && count[j]=$j
+    curl -sA "$UA" -b $workdir/cookie_$username "https://www.hostloc.com/space-uid-$j.html" | grep -o "最近访客" >/dev/null && count[j]=$j
     sleep $(shuf -i 12-21 -n 1)
     [[ ${#count[*]} -eq $times ]] && unset count && break
     done
-	
+    
     echo; echo $(date) 完成
-    echo $(date) 目前积分为：$(curl -s -H "$UA" -b $workdir/cookie_$username "https://www.hostloc.com/home.php?mod=spacecp&ac=credit&op=base" | grep -oE "积分: </em>\w*" | awk -F'[>]' '{print $2}')
+    echo $(date) 目前积分为：$(curl -sA "$UA" -b $workdir/cookie_$username "https://www.hostloc.com/home.php?mod=spacecp&ac=credit&op=base" | grep -oE "积分: </em>\w*" | awk -F'[>]' '{print $2}')
   done
 
   # clean
