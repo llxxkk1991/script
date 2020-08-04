@@ -1,5 +1,6 @@
 #!/usr/bin/env bash
-export PATH=/bin:/sbin:/usr/bin:/usr/sbin:/usr/local/bin:/usr/local/sbin:~/bin:/usr/local/go/bin
+PATH=/bin:/sbin:/usr/bin:/usr/sbin:/usr/local/bin:/usr/local/sbin:~/bin:/usr/local/go/bin
+export PATH
 # Usage:  debian 9/10 one_key for caddy2 tls websocket vmess v2ray
 # install: bash <(curl -s https://raw.githubusercontent.com/mixool/script/debian-9/raywss_vmess_ss_caddy_cftls.sh) my.domain.com cloudflare_api_token
 # uninstall: apt purge caddy -y; rm -rf /etc/apt/sources.list.d/caddy-fury.list; bash <(curl -L -s https://install.direct/go.sh) --remove; rm -rf /etc/v2ray/config.json
