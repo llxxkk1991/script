@@ -90,7 +90,7 @@ cat <<EOF >$TMPFILE
         {
             "protocol": "vless",
             "tag": "v2fun_$domain",
-            "settings": {"vnext": [{"address": "$domain","port": 443,"users": [{"id": "$wss_uuid","encryption": "none"}]}]},
+            "settings": {"vnext": [{"address": "$domain","port": 443,"users": [{"id": "$v2fun_uuid","encryption": "none"}]}]},
             "streamSettings": {"network": "ws","security": "tls","tlsSettings": {"allowInsecure": false,"serverName": "$domain"},"wsSettings": {"path": "/$v2fun_path","headers": {"Host": "$domain"}}}
         },
 
