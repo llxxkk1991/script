@@ -22,8 +22,9 @@ rm -rf /etc/apt/sources.list.d/caddy-fury.list
 echo "deb [trusted=yes] https://apt.fury.io/caddy/ /" | tee -a /etc/apt/sources.list.d/caddy-fury.list
 apt update && apt install caddy -y
 
-# install v2ray
+# install v2ray; update geoip.dat && geosite.dat
 bash <(curl https://raw.githubusercontent.com/v2fly/fhs-install-v2ray/master/install-release.sh)
+bash <(curl https://raw.githubusercontent.com/v2fly/fhs-install-v2ray/master/install-dat-release.sh)
 v2my_uuid=$(/usr/local/bin/v2ctl uuid)
 
 # config caddy
