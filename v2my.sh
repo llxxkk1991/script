@@ -67,7 +67,6 @@ cat <<EOF >/usr/local/etc/v2ray/config.json
     ],
     "routing": 
     {
-        "domainStrategy": "IPIfNonMatch",
         "rules": 
         [
             {"type": "field","outboundTag": "blocked","ip": ["geoip:private","geoip:cn"]},
