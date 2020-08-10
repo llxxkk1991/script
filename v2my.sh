@@ -70,7 +70,7 @@ cat <<EOF >/usr/local/etc/v2ray/config.json
         "domainStrategy": "IPIfNonMatch",
         "rules": 
         [
-            {"type": "field","outboundTag": "blocked","ip": ["geoip:private","geoip:cn"]}
+            {"type": "field","outboundTag": "blocked","ip": ["geoip:private","geoip:cn"]},
             {"type": "field","outboundTag": "blocked","domain": ["geosite:category-ads-all","geosite:cn"]}
         ]
     }
