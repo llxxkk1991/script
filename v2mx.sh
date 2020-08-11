@@ -105,12 +105,12 @@ systemctl enable v2ray && systemctl restart v2ray && sleep 1 && systemctl status
 # info
 echo; echo $(date) v2ray config info:
 cat <<EOF >$TMPFILE
-		{
+        {
             "protocol": "vless",
             "tag": "v2my_$domain",
             "settings": {"vnext": [{"address": "$domain","port": 443,"users": [{"id": "$v2my_uuid","encryption": "none"}]}]},
             "streamSettings": {"security": "tls"}
-		},
+        },
 
 EOF
 
