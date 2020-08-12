@@ -13,6 +13,7 @@ TMPFILE=$(mktemp) || exit 1
 ########
 [[ $# != 1 ]] && echo Err !!! Useage: bash this_script.sh my.domain.com && exit 1 || domain="$1"
 v2my_port=$(shuf -i 10000-65535 -n1)
+v2my_uuid=$(cat /proc/sys/kernel/random/uuid)
 v2my_path=$(tr -dc 'a-z0-9A-Z' </dev/urandom | head -c 16)
 ########
 
@@ -25,7 +26,6 @@ apt update && apt install caddy -y
 # install v2ray; update geoip.dat && geosite.dat
 bash <(curl https://raw.githubusercontent.com/v2fly/fhs-install-v2ray/master/install-release.sh)
 bash <(curl https://raw.githubusercontent.com/v2fly/fhs-install-v2ray/master/install-dat-release.sh)
-v2my_uuid=$(/usr/local/bin/v2ctl uuid)
 
 # config caddy
 cat <<EOF >/etc/caddy/Caddyfile
@@ -49,7 +49,7 @@ versions h2c
 EOF
 
 # config v2ray
-cat <<EOF >/usr/local/etc/v2ray/config.json
+cat <<EOF >/usr/local/etc/v2ray/my_inbounds.json
 {
     "inbounds": 
     [
@@ -58,13 +58,22 @@ cat <<EOF >/usr/local/etc/v2ray/config.json
             "settings": {"clients": [{"id": "$v2my_uuid"}],"decryption": "none"},
             "streamSettings": {"network": "h2","httpSettings": {"path": "/$v2my_path","host": ["$domain"]}}
         }
-    ],
-    
+    ]
+}
+EOF
+
+cat <<EOF >/usr/local/etc/v2ray/my_outbounds.json
+{
     "outbounds": 
     [
         {"protocol": "freedom","tag": "direct","settings": {}},
         {"protocol": "blackhole","tag": "blocked","settings": {}}
-    ],
+    ]
+}
+EOF
+
+cat <<EOF >/usr/local/etc/v2ray/my_routing.json
+{
     "routing": 
     {
         "rules": 
