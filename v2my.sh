@@ -4,7 +4,7 @@ export PATH
 # Usage:  debian 9/10 one_key for caddy2 tls websocket vmess v2ray
 # install: bash <(curl -s https://raw.githubusercontent.com/mixool/script/debian-9/v2my.sh) my.domain.com
 # uninstall: apt purge caddy -y; rm -rf /etc/apt/sources.list.d/caddy-fury.list; bash <(curl https://raw.githubusercontent.com/v2fly/fhs-install-v2ray/master/install-release.sh) --remove; rm -rf /usr/local/etc/v2ray /var/log/v2ray
-## Tips: 个人使用，仅供参考，配置随时改变，当前配置: h2 vless ,需编译最新caddy2
+## Tips: 个人使用，仅供参考，配置随时改变，当前配置: h2 vless
 
 # tempfile & rm it when exit
 trap 'rm -f "$TMPFILE"' EXIT
@@ -22,6 +22,9 @@ apt update && apt install apt-transport-https ca-certificates -y
 rm -rf /etc/apt/sources.list.d/caddy-fury.list
 echo "deb [trusted=yes] https://apt.fury.io/caddy/ /" | tee -a /etc/apt/sources.list.d/caddy-fury.list
 apt update && apt install caddy -y
+# caddy 2.x rc
+caddyURL="$(wget -qO-  https://api.github.com/repos/caddyserver/caddy/releases | grep -E "browser_download_url.*linux_amd64\.deb" | cut -f4 -d\" | head -n1)"
+wget -O $TMPFILE $caddyURL && dpkg -i $TMPFILE
 
 # install v2ray; update geoip.dat && geosite.dat
 bash <(curl https://raw.githubusercontent.com/v2fly/fhs-install-v2ray/master/install-release.sh)
