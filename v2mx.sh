@@ -57,7 +57,7 @@ cat <<EOF >/usr/local/etc/v2ray/config.json
         {
             "port": 443,"protocol": "vless",
             "settings": {"clients": [{"id": "$v2my_uuid"}],"decryption": "none","fallback": {"port": 80}},
-            "streamSettings": {"network": "tcp","security": "tls","tlsSettings": {"alpn": ["http/1.1"],"certificates": [{"certificateFile": "/root/.acme.sh/${domain}_ecc/fullchain.cer","keyFile": "/root/.acme.sh/${domain}_ecc/${domain}.key"}]}}
+            "streamSettings": {"security": "tls","tlsSettings": {"alpn": ["http/1.1"],"certificates": [{"certificateFile": "/root/.acme.sh/${domain}_ecc/fullchain.cer","keyFile": "/root/.acme.sh/${domain}_ecc/${domain}.key"}]}}
         }
     ],
     
