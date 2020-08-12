@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 PATH=/bin:/sbin:/usr/bin:/usr/sbin:/usr/local/bin:/usr/local/sbin:~/bin
 export PATH
-# Usage:  debian 9/10 one_key for caddy2 tls websocket vmess v2ray
+# Usage:  debian 9/10 one_key for caddy2 v2ray
 # install: bash <(curl -s https://raw.githubusercontent.com/mixool/script/debian-9/v2my.sh) my.domain.com
 # uninstall: apt purge caddy -y; rm -rf /etc/apt/sources.list.d/caddy-fury.list; bash <(curl https://raw.githubusercontent.com/v2fly/fhs-install-v2ray/master/install-release.sh) --remove; rm -rf /usr/local/etc/v2ray /var/log/v2ray
 ## Tips: 个人使用，仅供参考，配置随时改变，当前配置: h2 vless
