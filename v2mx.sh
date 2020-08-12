@@ -15,6 +15,7 @@ TMPFILE=$(mktemp) || exit 1
 domain="$1"
 export CF_Key="$2"
 export CF_Email="$3"
+v2my_uuid=$(cat /proc/sys/kernel/random/uuid)
 ########
 
 # install acme.sh
@@ -32,7 +33,6 @@ apt update && apt install caddy -y
 # install v2ray; update geoip.dat && geosite.dat
 bash <(curl https://raw.githubusercontent.com/v2fly/fhs-install-v2ray/master/install-release.sh)
 bash <(curl https://raw.githubusercontent.com/v2fly/fhs-install-v2ray/master/install-dat-release.sh)
-v2my_uuid=$(/usr/local/bin/v2ctl uuid)
 
 # config caddy
 cat <<EOF >/etc/caddy/Caddyfile
