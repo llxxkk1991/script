@@ -46,4 +46,4 @@ EOF
 systemctl enable gost.service && systemctl daemon-reload && systemctl restart gost.service && systemctl status gost | more | grep -A 2 "gost.service"
 
 # info
-echo; echo $(date); echo knock: $knock; echo username: $username; echo password: $password; echo https://$domain
+echo; echo $(date); echo knock: $knockpar; echo username: $username; echo password: $password; echo https://$domain
