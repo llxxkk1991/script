@@ -30,13 +30,13 @@ wget -O /etc/gost/index.html https://raw.githubusercontent.com/mixool/script/sou
 ## 代理账号密码以及Knock参数: https://docs.ginuerzh.xyz/gost/probe_resist/
 username="$(tr -dc 'a-z0-9A-Z' </dev/urandom | head -c 16)"
 password="$(tr -dc 'a-z0-9A-Z' </dev/urandom | head -c 16)"
-knock="$(tr -dc 'a-z0-9A-Z' </dev/urandom | head -c 32).localhost"
+knockpar="$(tr -dc 'a-z0-9A-Z' </dev/urandom | head -c 16).$domain"
 
 cat <<EOF > /etc/systemd/system/gost.service
 [Unit]
 Description=gost
 [Service]
-ExecStart=/usr/bin/gost -L=http2://$username:$password@:443?probe_resist=file:/etc/gost/index.html&knock=$knock&cert=/etc/gost/gost.crt&key=/etc/gost/gost.key
+ExecStart=/usr/bin/gost -L=http2://$username:$password@:443?probe_resist=file:/etc/gost/index.html&knock=$knockpar&cert=/etc/gost/gost.crt&key=/etc/gost/gost.key
 Restart=always
 User=root
 [Install]
