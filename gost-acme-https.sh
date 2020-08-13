@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 # Wiki: https://docs.ginuerzh.xyz/gost/
 # Usage: bash <(curl -s https://raw.githubusercontent.com/mixool/script/debian-9/gost-acme-https.sh.sh) my.domain.com CF_Key CF_Email
-## 一键GOST搭建443端口的服务端HTTPS代理，并开启防探测。使用acme和cloudflareApi自动管理证书，重复运行即可更改随机账号密码。
+## 一键GOST搭建443端口的服务端HTTP2代理，并开启防探测。使用acme和cloudflareApi自动管理证书，重复运行即可更改随机账号密码。
 ## Uninstall: /root/.acme.sh/acme.sh --uninstall; systemctl stop gost; systemctl disable gost; rm -rf /etc/systemd/system/gost.service /usr/bin/gost
 
 ######## 脚本需要传入三个参数： 域名,Cloudflare账户的GobalAPI,Cloudflare账户的Email
@@ -30,13 +30,13 @@ wget -O /etc/gost/index.html https://raw.githubusercontent.com/mixool/script/sou
 ## 代理账号密码以及Knock参数: https://docs.ginuerzh.xyz/gost/probe_resist/
 username="$(tr -dc 'a-z0-9A-Z' </dev/urandom | head -c 16)"
 password="$(tr -dc 'a-z0-9A-Z' </dev/urandom | head -c 16)"
-knock="$username.$password.com"
+knock="$(tr -dc 'a-z0-9A-Z' </dev/urandom | head -c 32).com"
 
 cat <<EOF > /etc/systemd/system/gost.service
 [Unit]
 Description=gost
 [Service]
-ExecStart=/usr/bin/gost -L=https://$username:$password@:443?probe_resist=file:/etc/gost/index.html&knock=$knock&cert=/etc/gost/gost.crt&key=/etc/gost/gost.key
+ExecStart=/usr/bin/gost -L=http2://$username:$password@:443?probe_resist=file:/etc/gost/index.html&knock=$knock&cert=/etc/gost/gost.crt&key=/etc/gost/gost.key
 Restart=always
 User=root
 [Install]
