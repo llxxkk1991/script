@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # Wiki: https://docs.ginuerzh.xyz/gost/
-# Usage: bash <(curl -s https://raw.githubusercontent.com/mixool/script/debian-9/gost-acme-https.sh.sh) my.domain.com CF_Key CF_Email
+# Usage: bash <(curl -s https://raw.githubusercontent.com/mixool/script/debian-9/gost-acme-https.sh) my.domain.com CF_Key CF_Email
 ## 一键GOST搭建443端口的服务端HTTP2代理，并开启防探测。使用acme和cloudflareApi自动管理证书，重复运行即可更改随机账号密码。
 ## Uninstall: /root/.acme.sh/acme.sh --uninstall; systemctl stop gost; systemctl disable gost; rm -rf /etc/systemd/system/gost.service /usr/bin/gost
 
