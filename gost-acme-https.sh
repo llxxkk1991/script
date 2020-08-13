@@ -1,7 +1,8 @@
 #!/usr/bin/env bash
 # Wiki: https://docs.ginuerzh.xyz/gost/
 # Usage: bash <(curl -s https://raw.githubusercontent.com/mixool/script/debian-9/gost-acme-https.sh) my.domain.com CF_Key CF_Email
-## 一键GOST搭建443端口的服务端HTTPS代理，并开启防探测。使用acme和cloudflareApi自动管理证书，重复运行即可更改随机账号密码。
+## 一键GOST搭建443端口的服务端HTTPS代理，并开启防探测。使用acme和cloudflareApi自动管理证书，重复运行即可更改随机账号密码
+## SwithcyOmega使用这个代理，先访问一次knock这个网址,推荐客户端naiveproxy: https://github.com/klzgrad/naiveproxy
 ## Uninstall: /root/.acme.sh/acme.sh --uninstall; systemctl stop gost; systemctl disable gost; rm -rf /etc/systemd/system/gost.service /usr/bin/gost
 
 ######## 脚本需要传入三个参数： 域名,Cloudflare账户的GobalAPI,Cloudflare账户的Email
@@ -46,4 +47,4 @@ EOF
 systemctl enable gost.service && systemctl daemon-reload && systemctl restart gost.service && systemctl status gost | more | grep -A 2 "gost.service"
 
 # info
-echo; echo $(date); echo knock: $knockpar; echo username: $username; echo password: $password; echo https://$domain
+echo; echo $(date); echo knock: $knockpar; echo username: $username; echo password: $password; echo proxy: https://$username:$password@$domain
