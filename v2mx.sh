@@ -1,10 +1,10 @@
 #!/usr/bin/env bash
 PATH=/bin:/sbin:/usr/bin:/usr/sbin:/usr/local/bin:/usr/local/sbin:~/bin
 export PATH
-# Usage:  debian 9/10 one_key for caddy2 tls websocket vmess v2ray
+# Usage:  debian 9/10 one_key for caddy2 tls vless v2ray
 # install: bash <(curl -s https://raw.githubusercontent.com/mixool/script/debian-9/v2mx.sh) my.domain.com CF_Key CF_Email
 # uninstall: apt purge caddy -y; rm -rf /etc/apt/sources.list.d/caddy-fury.list; bash <(curl https://raw.githubusercontent.com/v2fly/fhs-install-v2ray/master/install-release.sh) --remove; rm -rf /usr/local/etc/v2ray /var/log/v2ray
-## Tips: 个人使用，仅供参考，配置随时改变，当前配置: tcp tls  vless caddy 
+## Tips: 个人使用，仅供参考，配置随时改变，当前配置: tcp tls vless caddy 
 
 # tempfile & rm it when exit
 trap 'rm -f "$TMPFILE"' EXIT
@@ -18,12 +18,6 @@ export CF_Email="$3"
 v2my_uuid=$(cat /proc/sys/kernel/random/uuid)
 ########
 
-# install acme.sh
-apt install socat -y
-curl https://get.acme.sh | sh
-source  ~/.bashrc
-/root/.acme.sh/acme.sh --issue --dns dns_cf --keylength ec-256 -d $domain
-
 # install caddy
 apt update && apt install apt-transport-https ca-certificates -y
 rm -rf /etc/apt/sources.list.d/caddy-fury.list
@@ -33,6 +27,14 @@ apt update && apt install caddy -y
 # install v2ray; update geoip.dat && geosite.dat
 bash <(curl https://raw.githubusercontent.com/v2fly/fhs-install-v2ray/master/install-release.sh)
 bash <(curl https://raw.githubusercontent.com/v2fly/fhs-install-v2ray/master/install-dat-release.sh)
+
+# install acme.sh installcert
+apt install socat -y
+curl https://get.acme.sh | sh && source  ~/.bashrc
+/root/.acme.sh/acme.sh --upgrade --auto-upgrade
+/root/.acme.sh/acme.sh --issue --dns dns_cf --keylength ec-256 -d $domain
+/root/.acme.sh/acme.sh --installcert -d $domain --ecc --fullchain-file /usr/local/etc/v2ray/v2ray.crt --key-file /usr/local/etc/v2ray/v2ray.key --reloadcmd "service v2ray restart"
+chown -R nobody:nogroup /usr/local/etc/v2ray || chown -R nobody:nobody /usr/local/etc/v2ray
 
 # config caddy
 cat <<EOF >/etc/caddy/Caddyfile
@@ -50,22 +52,31 @@ Referrer-Policy no-referrer-when-downgrade
 EOF
 
 # config v2ray
-cat <<EOF >/usr/local/etc/v2ray/config.json
+cat <<EOF >/usr/local/etc/v2ray/my_inbounds.json
 {
     "inbounds": 
     [
         {
             "port": 443,"protocol": "vless",
             "settings": {"clients": [{"id": "$v2my_uuid"}],"decryption": "none","fallback": {"port": 80}},
-            "streamSettings": {"security": "tls","tlsSettings": {"alpn": ["http/1.1"],"certificates": [{"certificateFile": "/root/.acme.sh/${domain}_ecc/fullchain.cer","keyFile": "/root/.acme.sh/${domain}_ecc/${domain}.key"}]}}
+            "streamSettings": {"security": "tls","tlsSettings": {"alpn": ["http/1.1"],"certificates": [{"certificateFile": "/usr/local/etc/v2ray/v2ray.crt","keyFile": "/usr/local/etc/v2ray/v2ray.key"}]}}
         }
-    ],
-    
+    ]
+}
+EOF
+
+cat <<EOF >/usr/local/etc/v2ray/my_outbounds.json
+{
     "outbounds": 
     [
         {"protocol": "freedom","tag": "direct","settings": {}},
         {"protocol": "blackhole","tag": "blocked","settings": {}}
-    ],
+    ]
+}
+EOF
+
+cat <<EOF >/usr/local/etc/v2ray/my_routing.json
+{
     "routing": 
     {
         "rules": 
@@ -75,24 +86,6 @@ cat <<EOF >/usr/local/etc/v2ray/config.json
         ]
     }
 }
-EOF
-
-# config v2ray service
-cat <<EOF >/etc/systemd/system/v2ray.service
-[Unit]
-Description=V2Ray Service
-After=network.target nss-lookup.target
-
-[Service]
-User=root
-CapabilityBoundingSet=CAP_NET_ADMIN CAP_NET_BIND_SERVICE
-AmbientCapabilities=CAP_NET_ADMIN CAP_NET_BIND_SERVICE
-Environment=V2RAY_LOCATION_ASSET=/usr/local/lib/v2ray/
-ExecStart=/usr/local/bin/v2ray -config /usr/local/etc/v2ray/config.json
-Restart=on-failure
-
-[Install]
-WantedBy=multi-user.target
 EOF
 
 # systemctl service info
