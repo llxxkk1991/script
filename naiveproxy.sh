@@ -53,8 +53,21 @@ cat <<EOF >/etc/caddy/Caddyfile.json
                         "root": "/usr/share/caddy"
                     }],
                     "terminal": true
+                    }],
+                    "tls_connection_policies": [{
+                        "match": {"sni": ["$domain"]}
                     }]
                 }
+            }
+        },
+        "tls": {
+            "automation": {
+                "policies": [{
+                    "subjects": ["$domain"],
+                    "issuer": {
+                        "module": "acme"
+                    }
+                }]
             }
         }
     }
