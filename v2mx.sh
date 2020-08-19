@@ -52,7 +52,7 @@ Referrer-Policy no-referrer-when-downgrade
 EOF
 
 # config v2ray
-cat <<EOF >/usr/local/etc/v2ray/my_inbounds.json
+cat <<EOF >/usr/local/etc/v2ray/config.json
 {
     "inbounds": 
     [
@@ -61,22 +61,14 @@ cat <<EOF >/usr/local/etc/v2ray/my_inbounds.json
             "settings": {"clients": [{"id": "$v2my_uuid"}],"decryption": "none","fallback": {"port": 80}},
             "streamSettings": {"security": "tls","tlsSettings": {"alpn": ["http/1.1"],"certificates": [{"certificateFile": "/usr/local/etc/v2ray/v2ray.crt","keyFile": "/usr/local/etc/v2ray/v2ray.key"}]}}
         }
-    ]
-}
-EOF
+    ],
 
-cat <<EOF >/usr/local/etc/v2ray/my_outbounds.json
-{
     "outbounds": 
     [
         {"protocol": "freedom","tag": "direct","settings": {}},
         {"protocol": "blackhole","tag": "blocked","settings": {}}
-    ]
-}
-EOF
+    ],
 
-cat <<EOF >/usr/local/etc/v2ray/my_routing.json
-{
     "routing": 
     {
         "rules": 
