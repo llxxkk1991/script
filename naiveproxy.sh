@@ -2,12 +2,13 @@
 PATH=/bin:/sbin:/usr/bin:/usr/sbin:/usr/local/bin:/usr/local/sbin:~/bin
 export PATH
 # Usage:  debian 9/10 one_key naiveproxy： https://github.com/klzgrad/naiveproxy
-# install: bash <(curl -s https://raw.githubusercontent.com/mixool/script/debian-9/naiveproxy.sh) my.domain.com
+# install: bash <(curl -s https://raw.githubusercontent.com/mixool/script/debian-9/naiveproxy.sh) my.domain.com my@gmail.com
 # uninstall: apt purge caddy -y; rm -rf /etc/apt/sources.list.d/caddy-fury.list
 ## Tips: 个人使用，仅供参考
 
 ########
-[[ $# != 1 ]] && echo Err !!! Useage: bash this_script.sh my.domain.com && exit 1 || domain="$1"
+[[ $# != 2 ]] && echo Err !!! Useage: bash this_script.sh my.domain.com my@gmail.com && exit 1
+domain="$1" && email="$2"
 naivecaddyURL="https://github.com/mixool/script/raw/source/naivecaddy.gz"
 ########
 
@@ -65,6 +66,7 @@ cat <<EOF >/etc/caddy/Caddyfile.json
                 "policies": [{
                     "subjects": ["$domain"],
                     "issuer": {
+                        "email": "$email",
                         "module": "acme"
                     }
                 }]
