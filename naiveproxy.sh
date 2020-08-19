@@ -7,7 +7,7 @@ export PATH
 ## Tips: 个人使用，仅供参考
 
 ########
-[[ $# != 2 ]] && echo Err !!! Useage: bash this_script.sh my.domain.commy@gmail.com && exit 1
+[[ $# != 2 ]] && echo Err !!! Useage: bash this_script.sh my.domain.com my@gmail.com && exit 1
 domain="$1" && email="$2"
 ########
 
