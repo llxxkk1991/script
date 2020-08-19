@@ -42,6 +42,7 @@ cat <<EOF >/etc/caddy/Caddyfile.json
                             "handler": "forward_proxy",
                             "hide_ip": true,
                             "hide_via": true,
+                            "upstream": "",
                             "auth_user": "$username",
                             "auth_pass": "$password",
                             "probe_resistance": {"domain": "$probe_resistance"}
