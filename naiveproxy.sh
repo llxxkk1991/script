@@ -31,6 +31,7 @@ probe_resistance="$(tr -dc 'a-z0-9' </dev/urandom | head -c 32).com"
 # config caddy
 cat <<EOF >/etc/caddy/Caddyfile.json
 {
+    "admin": {"disabled": true},
     "apps": {
         "http": {
             "servers": {
