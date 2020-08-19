@@ -2,13 +2,13 @@
 PATH=/bin:/sbin:/usr/bin:/usr/sbin:/usr/local/bin:/usr/local/sbin:~/bin
 export PATH
 # Usage:  debian 9/10 one_key naiveproxy： https://github.com/klzgrad/naiveproxy
-# install: bash <(curl -s https://raw.githubusercontent.com/mixool/script/debian-9/naiveproxy.sh) my.domain.com my@gmail.com
+# install: bash <(curl -s https://raw.githubusercontent.com/mixool/script/debian-9/naiveproxy.sh) my.domain.com
 # uninstall: apt purge caddy -y; rm -rf /etc/apt/sources.list.d/caddy-fury.list
 ## Tips: 个人使用，仅供参考
 
 ########
-[[ $# != 2 ]] && echo Err !!! Useage: bash this_script.sh my.domain.com my@gmail.com && exit 1
-domain="$1" && email="$2"
+[[ $# != 1 ]] && echo Err !!! Useage: bash this_script.sh my.domain.com && exit 1 || domain="$1"
+naivecaddyURL="https://github.com/mixool/script/raw/source/naivecaddy.gz"
 ########
 
 # install caddy
@@ -19,7 +19,6 @@ apt update && apt install caddy -y
 
 ## 替换apt安装版本的caddy为按照naiveproxy说明编译的版本
 rm -rf /usr/bin/caddy
-naivecaddyURL="https://github.com/mixool/script/raw/source/naivecaddy.gz"
 wget  -O - $naivecaddyURL | gzip -d > /usr/bin/caddy && chmod +x /usr/bin/caddy
 sed -i "s/caddy\/Caddyfile$/caddy\/Caddyfile\.json/g" /lib/systemd/system/caddy.service
 
@@ -54,22 +53,8 @@ cat <<EOF >/etc/caddy/Caddyfile.json
                         "root": "/usr/share/caddy"
                     }],
                     "terminal": true
-                    }],
-                    "tls_connection_policies": [{
-                        "match": {"sni": ["$domain"]}
                     }]
                 }
-            }
-        },
-        "tls": {
-            "automation": {
-                "policies": [{
-                    "subjects": ["$domain"],
-                    "issuer": {
-                        "email": "$email",
-                        "module": "acme"
-                    }
-                }]
             }
         }
     }
