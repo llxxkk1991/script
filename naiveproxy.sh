@@ -3,32 +3,26 @@ PATH=/bin:/sbin:/usr/bin:/usr/sbin:/usr/local/bin:/usr/local/sbin:~/bin
 export PATH
 # Usage:  debian 9/10 one_key naiveproxy： https://github.com/klzgrad/naiveproxy
 # install: bash <(curl -s https://raw.githubusercontent.com/mixool/script/debian-9/naiveproxy.sh) my.domain.com my@gmail.com
-# uninstall: apt purge caddy -y; rm -rf /etc/apt/sources.list.d/caddy-fury.list
+# uninstall: systemctl disable caddy; systemctl stop caddy; rm -rf /usr/bin/caddy /lib/systemd/system/caddy.service
 ## Tips: 个人使用，仅供参考
 
-########
+# var
 [[ $# != 2 ]] && echo Err !!! Useage: bash this_script.sh my.domain.com my@gmail.com && exit 1
 domain="$1" && email="$2"
+
+# caddy with naive fork of forwardproxy: https://github.com/klzgrad/forwardproxy
 naivecaddyURL="https://github.com/mixool/script/raw/source/naivecaddy.gz"
-########
-
-# install caddy
-apt update && apt install apt-transport-https ca-certificates -y
-rm -rf /etc/apt/sources.list.d/caddy-fury.list
-echo "deb [trusted=yes] https://apt.fury.io/caddy/ /" | tee -a /etc/apt/sources.list.d/caddy-fury.list
-apt update && apt install caddy -y
-
-## 替换apt安装版本的caddy为按照naiveproxy说明编译的版本
 rm -rf /usr/bin/caddy
-wget  -O - $naivecaddyURL | gzip -d > /usr/bin/caddy && chmod +x /usr/bin/caddy
-sed -i "s/caddy\/Caddyfile$/caddy\/Caddyfile\.json/g" /lib/systemd/system/caddy.service
+wget --no-check-certificate -O - $naivecaddyURL | gzip -d > /usr/bin/caddy && chmod +x /usr/bin/caddy
+wget --no-check-certificate -O /lib/systemd/system/caddy.service https://raw.githubusercontent.com/caddyserver/dist/master/init/caddy.service
+sed -i -e "s/User=caddy$/User=root/g" -e "s/Group=caddy$/Group=root/g" -e "s/caddy\/Caddyfile$/caddy\/Caddyfile\.json/g" /lib/systemd/system/caddy.service
 
 # secrets
 username="$(tr -dc 'a-z0-9A-Z' </dev/urandom | head -c 16)"
 password="$(tr -dc 'a-z0-9A-Z' </dev/urandom | head -c 16)"
 probe_resistance="$(tr -dc 'a-z0-9' </dev/urandom | head -c 32).com"
 
-# config caddy
+# config caddy json
 cat <<EOF >/etc/caddy/Caddyfile.json
 {
     "admin": {"disabled": true},
