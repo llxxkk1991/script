@@ -45,7 +45,7 @@ cat <<EOF >/etc/caddy/Caddyfile.json
                     "match": [{"host": ["$domain"]}],
                     "handle": [{
                         "handler": "static_response",
-                        "root": "Hello, world!"
+                        "body": "Hello, world!"
                     }],
                     "terminal": true
                     }],
