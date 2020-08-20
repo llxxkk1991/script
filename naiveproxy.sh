@@ -15,7 +15,7 @@ naivecaddyURL="https://github.com/mixool/script/raw/source/naivecaddy.gz"
 rm -rf /usr/bin/caddy
 wget --no-check-certificate -O - $naivecaddyURL | gzip -d > /usr/bin/caddy && chmod +x /usr/bin/caddy
 wget --no-check-certificate -O /lib/systemd/system/caddy.service https://raw.githubusercontent.com/caddyserver/dist/master/init/caddy.service
-sed -i -e "s/User=caddy$/User=root/g" -e "s/Group=caddy$/Group=root/g" -e "s/caddy\/Caddyfile$/caddy\/Caddyfile\.json/g" /lib/systemd/system/caddy.service
+sed -i -e "s/User=caddy$/User=root/g" -e "/Group=caddy$/d" -e "s/caddy\/Caddyfile$/caddy\/Caddyfile\.json/g" -e "s/^LimitNPROC=.*/LimitNPROC=51200/g" /lib/systemd/system/caddy.service
 
 # secrets
 username="$(tr -dc 'a-z0-9A-Z' </dev/urandom | head -c 16)"
@@ -44,8 +44,8 @@ cat <<EOF >/etc/caddy/Caddyfile.json
                     }, {
                     "match": [{"host": ["$domain"]}],
                     "handle": [{
-                        "handler": "file_server",
-                        "root": "/usr/share/caddy"
+                        "handler": "static_response",
+                        "root": "Hello, world!"
                     }],
                     "terminal": true
                     }],
@@ -76,4 +76,5 @@ systemctl daemon-reload && systemctl enable caddy && systemctl restart caddy && 
 
 # info
 echo; echo $(date); echo probe_resistance: $probe_resistance; echo username: $username; echo password: $password; echo proxy: https://$username:$password@$domain
+
 # done
